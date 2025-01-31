@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace askJiffy_service.Configuration.EfConfigs
 {
-    public class ChatConfiguration : IEntityTypeConfiguration<ChatDTO>
+    public class ChatSessionConfiguration : IEntityTypeConfiguration<ChatSessionDTO>
     {
-        public void Configure(EntityTypeBuilder<ChatDTO> builder)
+        public void Configure(EntityTypeBuilder<ChatSessionDTO> builder)
         {
            builder.HasKey(t => t.Id);
             builder.Property(t => t.Title).HasMaxLength(255);

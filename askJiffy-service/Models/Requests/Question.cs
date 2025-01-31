@@ -8,7 +8,7 @@ namespace askJiffy_service.Models.Requests
         [Required]
         public required string QuestionText { get; set; }
         [Required]
-        public required questionType QuestionType { get; set; }
+        public required QuestionType QuestionType { get; set; }
 
     }
 }

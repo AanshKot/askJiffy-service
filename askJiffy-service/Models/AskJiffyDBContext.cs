@@ -13,19 +13,18 @@ namespace askJiffy_service.Models
         }
 
         //add Foreign key references to Chat and Vehicles
-        DbSet<ChatDTO> Chats { get; set; }
+        DbSet<ChatSessionDTO> ChatSessions { get; set; }
+        DbSet<ChatMessageDTO> ChatMessages { get; set; }
         DbSet<VehicleDTO> Vehicles { get; set; }
         DbSet<UserDTO> Users { get; set; }
 
-        DbSet<QuestionDTO> Questions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             
             //Define entity specific configuration in EFConfig
-            modelBuilder.ApplyConfiguration(new ChatConfiguration());
+            modelBuilder.ApplyConfiguration(new ChatSessionConfiguration());
             
-            //Define relations between entities below
-
+            
         }
     }
 }

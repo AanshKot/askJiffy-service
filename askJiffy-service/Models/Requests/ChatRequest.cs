@@ -12,6 +12,6 @@ namespace askJiffy_service.Models.Requests
         [Required]
         public required string InitialQuestionText { get; set; }
         [Required]
-        public questionType QuestionType { get; set; }
+        public QuestionType QuestionType { get; set; }
     }
 }
