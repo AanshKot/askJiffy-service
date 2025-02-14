@@ -8,12 +8,12 @@ namespace askJiffy_service.Configuration.EfConfigs
     {
         public void Configure(EntityTypeBuilder<ChatSessionDTO> builder)
         {
-           builder.HasKey(t => t.Id);
+            builder.HasKey(t => t.Id);
             builder.Property(t => t.Title).HasMaxLength(255);
             builder.Property(t => t.CreatedAt).IsRequired().HasColumnType("Date").HasDefaultValueSql("GETDATE()");
             
             //Update Date has to be > DateCreatedAt
-            builder.Property(t => t.UpdatedAt).IsRequired().HasColumnType("Date");
+            builder.Property(t => t.UpdatedAt).IsRequired().HasColumnType("Date").HasDefaultValueSql("GETDATE()");
         }
     }
 }
