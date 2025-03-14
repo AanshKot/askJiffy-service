@@ -13,10 +13,10 @@ namespace askJiffy_service.Models
         }
 
         //add Foreign key references to Chat and Vehicles
-        DbSet<ChatSessionDTO> ChatSessions { get; set; }
-        DbSet<ChatMessageDTO> ChatMessages { get; set; }
-        DbSet<VehicleDTO> Vehicles { get; set; }
-        DbSet<UserDTO> Users { get; set; }
+        public DbSet<ChatSessionDTO> ChatSessions { get; set; }
+        public DbSet<ChatMessageDTO> ChatMessages { get; set; }
+        public DbSet<VehicleDTO> Vehicles { get; set; }
+        public DbSet<UserDTO> Users { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
