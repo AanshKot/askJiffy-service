@@ -1,6 +1,8 @@
 using askJiffy_service.Models;
 using Betalgo.Ranul.OpenAI.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,25 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AskJiffyDBContext>(options =>
     options.UseSqlServer(connectionString));
 
+//Add JWT bearer authentication 
+//Identifies if user is authenticated and if provider token is from correct client through audience option
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+    jwtBearerOptions => {
+        jwtBearerOptions.Authority = "https://accounts.google.com";
+        jwtBearerOptions.Audience = builder.Configuration.GetValue<string>("Google-ClientId") ?? throw new InvalidOperationException("Missing Google ClientId");
+        jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters { 
+            ValidateIssuer = true,
+            ValidIssuer = "https://accounts.google.com",
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration.GetValue<string>("Google-ClientId") ?? throw new InvalidOperationException("Missing Google ClientId"),
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+    };
+});
+
+//add method of checking if request is allowed to access resources
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -35,6 +56,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+//use authentication middleware
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

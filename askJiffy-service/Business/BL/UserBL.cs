@@ -23,8 +23,6 @@ namespace askJiffy_service.Business.BL
             
 
             var userDTO = await _userDAL.GetOrCreateUser(validateUserRequest.Email,validateUserRequest.Provider);
-
-
         }
     }
 }

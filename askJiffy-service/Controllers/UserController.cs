@@ -1,6 +1,7 @@
 ﻿using askJiffy_service.Business.BL;
 using askJiffy_service.Models.Requests;
 using askJiffy_service.Models.Responses.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace askJiffy_service.Controllers
@@ -18,6 +19,7 @@ namespace askJiffy_service.Controllers
 
         //this endpoint verifies user access token and checks if the user exists in the DB, if the user doesn't
         //it creates one
+        [Authorize] // forces bearer authentication, request must contain valid access token in header (look at Program.cs addAuthentication)
         [HttpGet("ValidateUser")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
