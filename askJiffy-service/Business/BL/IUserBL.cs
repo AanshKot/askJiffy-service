@@ -5,6 +5,6 @@ namespace askJiffy_service.Business.BL
 {
     public interface IUserBL
     {
-        Task<UserProfile> GetOrCreateUser(ValidateUserRequest validateUserRequest);
+        Task<UserProfile> GetOrCreateUser(string email, string provider);
     }
 }

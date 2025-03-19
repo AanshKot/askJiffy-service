@@ -26,11 +26,18 @@ namespace askJiffy_service.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         //IAction represents an action method in a controller, used to return various types of HTTP responses 
         //from controller method
-        //name might be sessionToken no its not sessionToken in cookies its something else
-        public async Task<ActionResult<UserProfile>> ValidateUser([FromBody] ValidateUserRequest validateUserRequest) {
+        public async Task<ActionResult<UserProfile>> ValidateUser() {
+            var userEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+            var provider = User.FindFirst("iss")?.Value; //issuer of token "https://accounts.google.com"
+
+            if (string.IsNullOrEmpty(userEmail) || string.IsNullOrEmpty(provider))
+            {
+                return BadRequest(new { Error = "Required claims (email and provider) are missing." });
+            }
+
             try
             {
-                var validatedUser = await _userBL.GetOrCreateUser(validateUserRequest);
+                var validatedUser = await _userBL.GetOrCreateUser(userEmail,provider);
                 return Ok(validatedUser);
             }
             catch (UnauthorizedAccessException ue)

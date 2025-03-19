@@ -8,7 +8,7 @@ namespace askJiffy_service.Models.DTOs
         public required string Email { get; set; }
         public required string Provider { get; set; }
         public required UserRole Role { get; set; }
-        public ICollection<VehicleDTO>? Vehicles { get; set; }
-        public ICollection<ChatSessionDTO>? ChatSessions { get; set; }
+        public required ICollection<VehicleDTO> Vehicles { get; set; }
+        public required ICollection<ChatSessionDTO> ChatSessions { get; set; }
     }
 }
