@@ -19,8 +19,8 @@ namespace askJiffy_service.Controllers
 
         //this endpoint verifies user access token and checks if the user exists in the DB, if the user doesn't
         //it creates one
-        [Authorize] // forces bearer authentication, request must contain valid access token in header (look at Program.cs addAuthentication)
-        [HttpGet("ValidateUser")]
+        [Authorize] // forces bearer authentication, request must contain valid ID token in header (look at Program.cs addAuthentication)
+        [HttpGet("getprofile")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

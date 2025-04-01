@@ -34,7 +34,8 @@ namespace askJiffy_service.Mappers
                 Id = vehicle.Id,
                 Make = vehicle.Make,
                 Model = vehicle.Model,
-                Year = vehicle.Year
+                Year = vehicle.Year,
+                // ImageUrl = vehicle.ImageUrl,
             }).ToList();
         }
     }

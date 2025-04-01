@@ -13,5 +13,6 @@ namespace askJiffy_service.Models.DTOs
         public Transmission? Transmission { get; set; }
         public int? Mileage { get; set; }
         public ICollection<ChatSessionDTO>? ChatSessions { get; set; }
+        // public string? ImageUrl {  get; set; }
     }
 }
