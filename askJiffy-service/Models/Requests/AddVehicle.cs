@@ -2,7 +2,7 @@
 
 namespace askJiffy_service.Models.Requests
 {
-    public class Vehicle
+    public class AddVehicle
     {
         public int? UserId { get; set; }
         public string? Chassis {  get; set; }

@@ -13,7 +13,7 @@ namespace askJiffy_service.Configuration.EfConfigs
             builder.Property(t => t.CreatedAt).IsRequired().HasColumnType("Date").HasDefaultValueSql("GETDATE()");
             
             //Update Date has to be > DateCreatedAt
-            builder.Property(t => t.UpdatedAt).IsRequired().HasColumnType("Date").HasDefaultValueSql("GETDATE()");
+            builder.Property(t => t.UpdatedAt).IsRequired().ValueGeneratedOnAddOrUpdate().HasColumnType("Date").HasDefaultValueSql("GETDATE()");
         }
     }
 }
