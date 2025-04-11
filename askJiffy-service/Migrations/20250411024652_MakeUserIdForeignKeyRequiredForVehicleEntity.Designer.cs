@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using askJiffy_service.Models;
 
@@ -11,9 +12,11 @@ using askJiffy_service.Models;
 namespace askJiffy_service.Migrations
 {
     [DbContext(typeof(AskJiffyDBContext))]
-    partial class AskJiffyDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250411024652_MakeUserIdForeignKeyRequiredForVehicleEntity")]
+    partial class MakeUserIdForeignKeyRequiredForVehicleEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,7 +78,7 @@ namespace askJiffy_service.Migrations
                         .HasColumnType("Date")
                         .HasDefaultValueSql("GETDATE()");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.Property<int>("VehicleId")
@@ -132,16 +135,14 @@ namespace askJiffy_service.Migrations
 
                     b.Property<string>("Make")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Mileage")
                         .HasColumnType("int");
 
                     b.Property<string>("Model")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Transmission")
                         .HasColumnType("int");
@@ -174,9 +175,7 @@ namespace askJiffy_service.Migrations
                 {
                     b.HasOne("askJiffy_service.Models.DTOs.UserDTO", "User")
                         .WithMany("ChatSessions")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.HasOne("askJiffy_service.Models.DTOs.VehicleDTO", "Vehicle")
                         .WithMany("ChatSessions")
@@ -194,7 +193,7 @@ namespace askJiffy_service.Migrations
                     b.HasOne("askJiffy_service.Models.DTOs.UserDTO", "User")
                         .WithMany("Vehicles")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");

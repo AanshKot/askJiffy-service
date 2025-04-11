@@ -25,6 +25,7 @@ namespace askJiffy_service.Models
             modelBuilder.ApplyConfiguration(new ChatSessionConfiguration());
             modelBuilder.ApplyConfiguration(new ChatMessageConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new VehicleConfiguration());
 
             //For DB model refer to db context puml diagram
 
@@ -40,7 +41,8 @@ namespace askJiffy_service.Models
                 b.HasOne(cs => cs.User) 
                 .WithMany(u => u.ChatSessions) 
                 .HasForeignKey("UserId")
-                .IsRequired(false);
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
             });
 
             //User - Vehicle Relationship
@@ -49,8 +51,9 @@ namespace askJiffy_service.Models
             {
                 b.HasOne(v => v.User)
                  .WithMany(u => u.Vehicles)
-                 .HasForeignKey("UserId") 
-                 .IsRequired(false); 
+                 .HasForeignKey("UserId")
+                 .OnDelete(DeleteBehavior.Restrict)
+                 .IsRequired(); 
             });
 
             //ChatMessage - ChatSession Relationship
