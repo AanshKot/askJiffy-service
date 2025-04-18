@@ -18,25 +18,22 @@ namespace askJiffy_service.Mappers
                 Role = entity.Role
             };
         }
-
-        public static List<UserChat> MapToUserChatHistory(this ICollection<ChatSessionDTO> chatSessions) {
-            return chatSessions.Select(chatSessions => new UserChat { 
-                Id = chatSessions.Id,
-                Title = chatSessions.Title,
-                CreatedAt = chatSessions.CreatedAt,
-                UpdatedAt = chatSessions.UpdatedAt
-            }).ToList(); 
+        public static UserChat MapToUserChat(this ChatSessionDTO chatSessionDTO)
+        {
+            return new UserChat
+            {
+                Id = chatSessionDTO.Id,
+                Title = chatSessionDTO.Title,
+                CreatedAt = chatSessionDTO.CreatedAt,
+                UpdatedAt = chatSessionDTO.UpdatedAt
+            };
+        }
+        private static List<UserChat> MapToUserChatHistory(this ICollection<ChatSessionDTO> chatSessions) {
+            return chatSessions.Select(chatSession => chatSession.MapToUserChat()).ToList(); 
         }
 
-        public static List<UserVehicle> MapToUserVehicleHistory(this ICollection<VehicleDTO> vehicleDTOs) {
-            return vehicleDTOs.Select(vehicle => new UserVehicle
-            {
-                Id = vehicle.Id,
-                Make = vehicle.Make,
-                Model = vehicle.Model,
-                Year = vehicle.Year,
-                // ImageUrl = vehicle.ImageUrl,
-            }).ToList();
+        private static List<Vehicle> MapToUserVehicleHistory(this ICollection<VehicleDTO> vehicleDTOs) {
+            return vehicleDTOs.Select(vehicle => vehicle.MapToUserVehicle()).ToList();
         }
     }
 }

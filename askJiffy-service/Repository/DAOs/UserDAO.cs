@@ -35,19 +35,21 @@ namespace askJiffy_service.Repository.DAOs
             return user;
         }
 
-        public async Task<bool> InsertNewUser(UserDTO userDTO)
+        public async Task<UserDTO> InsertNewUser(UserDTO userDTO)
         {
-            try {
                 _context.Users.Add(userDTO);
                 await _context.SaveChangesAsync();
-                return true;
-            }
-            catch(Exception ex)
-            {
-                _logger.LogError(ex, "Error inserting user: {Email}", userDTO.Email);
-                return false;
-            }
-            
+                return userDTO;       
+        }
+
+        public async Task<VehicleDTO> SaveNewVehicle(VehicleDTO vehicleDTO)
+        {
+            _context.Vehicles.Add(vehicleDTO);
+            await _context.SaveChangesAsync();
+
+            /*returned the same object reference as passed in the argument but EFCore updates object in-place when calling saveChangesAsync()
+            means vehicleDTO will now have autocreated Id */
+            return vehicleDTO;
         }
     }
 }

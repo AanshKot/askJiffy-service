@@ -1,4 +1,5 @@
 ﻿using askJiffy_service.Business.DAL;
+using askJiffy_service.Exceptions;
 using askJiffy_service.Mappers;
 using askJiffy_service.Models.Requests;
 using askJiffy_service.Models.Responses.User;
@@ -14,24 +15,25 @@ namespace askJiffy_service.Business.BL
             _userDAL = userDAL;
         }
 
-        //could pass trigger == SignUp here then we don't need to check if user is new or not
         public async Task<UserProfile> GetOrCreateUser(string email, string provider)
-        {
-            // 1. Need to throw an error if invalid email AND/OR provider
-            // 2. Need to verify somehow how user is coming from my clientside app and is authenticated and authorized
-            // otherwise we throw an unauthorized exception
-            // 3. Call the DAL once those checks are done
-            
-            
-            var userDTO = await _userDAL.GetOrCreateUser(email,provider);
-            if (userDTO == null) {
-                throw new Exception();
-            }
+        {            
+            var userDTO = await _userDAL.GetOrCreateUser(email,provider) ?? throw new UserNotFoundException("Cannot find or create a user.");
 
             //map to UserProfile return object
             var userProfile = userDTO.MapToUserProfile();
 
             return userProfile;
         }
+
+        // not checking if vehicle exists, saving vehicle if user exists, for that we need a separate check if the user exists
+        // refactor logic for GetOrCreateUser, separate the getting and the creating of a user, get user then check if user exists
+        public async Task<Vehicle> SaveVehicle(SaveVehicleRequest vehicle, string email)
+        {
+       
+            var user = await _userDAL.GetUserByEmail(email) ?? throw new UserNotFoundException("User not found. Cannot save vehicle without an associated user.");
+            var newVehicle = vehicle.MapToVehicleDTO(user);
+            var vehicleDTO = await _userDAL.SaveVehicle(newVehicle);
+            return vehicleDTO.MapToUserVehicle();  
+        } 
     }
 }
