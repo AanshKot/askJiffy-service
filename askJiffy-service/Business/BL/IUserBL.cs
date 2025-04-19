@@ -7,5 +7,6 @@ namespace askJiffy_service.Business.BL
     {
         Task<UserProfile> GetOrCreateUser(string email, string provider);
         Task<Vehicle> SaveVehicle(SaveVehicleRequest vehicle, string email);
+        Task<bool> DeleteVehicle(string email, int vehicleId);
     }
 }

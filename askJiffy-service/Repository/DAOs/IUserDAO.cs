@@ -8,5 +8,6 @@ namespace askJiffy_service.Repository.DAOs
         Task<UserDTO> InsertNewUser(UserDTO userDTO);
 
         Task<VehicleDTO> SaveNewVehicle(VehicleDTO vehicleDTO);
+        Task<bool> DeleteVehicle(string email, int vehicleId);
     }
 }

@@ -1,4 +1,5 @@
-﻿using askJiffy_service.Models;
+﻿using askJiffy_service.Exceptions;
+using askJiffy_service.Models;
 using askJiffy_service.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,7 +30,7 @@ namespace askJiffy_service.Repository.DAOs
 
             if (user != null) { 
                 await _context.Entry(user).Collection(user => user.ChatSessions).LoadAsync();
-                await _context.Entry(user).Collection(user => user.Vehicles).LoadAsync();
+                await _context.Entry(user).Collection(user => user.Vehicles).Query().Where(v => !v.IsDeleted).LoadAsync();
             }
 
             return user;
@@ -51,5 +52,19 @@ namespace askJiffy_service.Repository.DAOs
             means vehicleDTO will now have autocreated Id */
             return vehicleDTO;
         }
+
+
+        public async Task<bool> DeleteVehicle(string email, int vehicleId)
+        {
+            var user = await _context.Users.Include(u => u.Vehicles).FirstOrDefaultAsync(user => user.Email.Equals(email)) 
+            ?? throw new UserNotFoundException("Error Deleting Vehicle: User Profile not Found.");
+
+            var vehicle = user.Vehicles.FirstOrDefault(v => v.Id == vehicleId) ?? throw new VehicleNotFoundException("User has either already deleted this vehicle or this vehicle doesn't exist");
+
+            vehicle.IsDeleted = true;
+            await _context.SaveChangesAsync();
+            return vehicle.IsDeleted;
+        }
+
     }
 }

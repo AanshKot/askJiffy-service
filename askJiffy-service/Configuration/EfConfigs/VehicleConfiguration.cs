@@ -16,6 +16,7 @@ namespace askJiffy_service.Configuration.EfConfigs
             builder.Property(v => v.Year).IsRequired().HasColumnType("int"); // For validation in app logic
             builder.Property(v => v.Transmission).HasColumnType("int");
             builder.Property(v => v.Mileage).HasColumnType("int");
+            builder.Property(v => v.IsDeleted).HasDefaultValue(false);
         }
     }
 }
