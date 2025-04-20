@@ -29,25 +29,35 @@ namespace askJiffy_service.Business.DAL
                     Vehicles = new List<VehicleDTO>(), 
                     ChatSessions = new List<ChatSessionDTO>() 
                 };
-                var insertedUser = false;
+              
+                var insertedUser = await _userDAO.InsertNewUser(defaultUserProfile);
 
-                try { 
-                    insertedUser = await _userDAO.InsertNewUser(defaultUserProfile);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.Message, ex);
-                }
-
-               if(insertedUser)
-               {
-                    //if user has been inserted correctly return user profile
-                    return defaultUserProfile;
-               }
-
-                return null;
+                return insertedUser;
             }
             return user;
+        }
+
+        public async Task<UserDTO?> GetUserByEmail(string email)
+        {
+            var user = await _userDAO.getUserByEmail(email);
+            return user;
+        }
+
+        public async Task<VehicleDTO> SaveVehicle(VehicleDTO vehicle) {
+            var savedVehicleDTO = await _userDAO.SaveNewVehicle(vehicle);
+            return savedVehicleDTO;
+        }
+        public async Task<VehicleDTO> UpdateVehicle(VehicleDTO vehicle)
+        {
+            return await _userDAO.UpdateVehicle(vehicle);
+        }
+        public async Task<VehicleDTO?> GetUserVehicle(string email, int vehicleId)
+        {
+            return await _userDAO.GetVehicleById(email, vehicleId);
+        }
+        public async Task<bool> DeleteVehicle(string email, int vehicleId)
+        {
+            return await _userDAO.DeleteVehicle(email, vehicleId);
         }
     }
 }

@@ -6,5 +6,8 @@ namespace askJiffy_service.Business.BL
     public interface IUserBL
     {
         Task<UserProfile> GetOrCreateUser(string email, string provider);
+        Task<Vehicle> SaveVehicle(SaveVehicleRequest vehicle, string email);
+        Task<Vehicle> UpdateVehicle(int vehicleId, SaveVehicleRequest vehicle, string email);
+        Task<bool> DeleteVehicle(string email, int vehicleId);
     }
 }
