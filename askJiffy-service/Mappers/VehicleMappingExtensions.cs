@@ -35,5 +35,17 @@ namespace askJiffy_service.Mappers
                 User = userDTO
             };
         }
+
+        public static VehicleDTO MapToVehicleDTO(this SaveVehicleRequest updateVehicle, VehicleDTO existingVehicle) 
+        {
+            existingVehicle.Make = updateVehicle.Make;
+            existingVehicle.Model = updateVehicle.Model;
+            existingVehicle.Year = updateVehicle.Year;
+            existingVehicle.Chassis = updateVehicle.Chassis;
+            existingVehicle.Transmission = updateVehicle.Transmission;
+            existingVehicle.Mileage = updateVehicle.Mileage;
+
+            return existingVehicle;
+        }
     }
 }

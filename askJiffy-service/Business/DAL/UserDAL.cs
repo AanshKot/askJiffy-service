@@ -47,7 +47,14 @@ namespace askJiffy_service.Business.DAL
             var savedVehicleDTO = await _userDAO.SaveNewVehicle(vehicle);
             return savedVehicleDTO;
         }
-
+        public async Task<VehicleDTO> UpdateVehicle(VehicleDTO vehicle)
+        {
+            return await _userDAO.UpdateVehicle(vehicle);
+        }
+        public async Task<VehicleDTO?> GetUserVehicle(string email, int vehicleId)
+        {
+            return await _userDAO.GetVehicleById(email, vehicleId);
+        }
         public async Task<bool> DeleteVehicle(string email, int vehicleId)
         {
             return await _userDAO.DeleteVehicle(email, vehicleId);

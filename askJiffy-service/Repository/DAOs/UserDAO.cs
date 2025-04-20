@@ -52,7 +52,20 @@ namespace askJiffy_service.Repository.DAOs
             means vehicleDTO will now have autocreated Id */
             return vehicleDTO;
         }
+        public async Task<VehicleDTO> UpdateVehicle(VehicleDTO vehicleDTO)
+        {
+            _context.Vehicles.Update(vehicleDTO);
+            await _context.SaveChangesAsync();
+            return vehicleDTO;
+        }
+        public async Task<VehicleDTO?> GetVehicleById(string email, int vehicleId)
+        {
+            var user = await _context.Users.Include(u => u.Vehicles).FirstOrDefaultAsync(user => user.Email.Equals(email))
+             ?? throw new UserNotFoundException("Error Finding Vehicle: User Profile not Found.");
 
+            var vehicle = user.Vehicles.FirstOrDefault(v => v.Id == vehicleId && !v.IsDeleted);
+            return vehicle;
+        }
 
         public async Task<bool> DeleteVehicle(string email, int vehicleId)
         {
@@ -65,6 +78,5 @@ namespace askJiffy_service.Repository.DAOs
             await _context.SaveChangesAsync();
             return vehicle.IsDeleted;
         }
-
     }
 }

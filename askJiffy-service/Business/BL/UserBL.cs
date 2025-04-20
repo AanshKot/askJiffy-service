@@ -36,6 +36,19 @@ namespace askJiffy_service.Business.BL
             return vehicleDTO.MapToUserVehicle();  
         }
 
+        public async Task<Vehicle> UpdateVehicle(int vehicleId, SaveVehicleRequest vehicle, string email)
+        {
+            //get user vehicle
+            var userVehicle = await _userDAL.GetUserVehicle(email, vehicleId) ?? throw new VehicleNotFoundException("User vehicle doesn't exist");
+            
+            //overloaded method, update user vehicleDTO
+            var updatedVehicle = vehicle.MapToVehicleDTO(userVehicle);
+             
+            var savedVehicle = await _userDAL.UpdateVehicle(updatedVehicle);
+            return savedVehicle.MapToUserVehicle();
+        }
+
+
         public async Task<bool> DeleteVehicle(string email, int vehicleId)
         {
             return await _userDAL.DeleteVehicle(email,vehicleId);
