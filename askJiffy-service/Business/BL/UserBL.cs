@@ -25,13 +25,25 @@ namespace askJiffy_service.Business.BL
             return userProfile;
         }
 
+
+        public async Task<List<Vehicle>> GetVehicles(string email)
+        {
+            var vehicleDTOList = await  _userDAL.GetVehicles(email);
+            var vehicles = new List<Vehicle>();
+
+            foreach(var vehicleDTO in vehicleDTOList) {
+                vehicles.Add(vehicleDTO.MapToUserVehicle());
+            }
+            return vehicles;
+        }
+
         // not checking if vehicle exists, saving vehicle if user exists, for that we need a separate check if the user exists
         // refactor logic for GetOrCreateUser, separate the getting and the creating of a user, get user then check if user exists
         public async Task<Vehicle> SaveVehicle(SaveVehicleRequest vehicle, string email)
         {
        
             var user = await _userDAL.GetUserByEmail(email) ?? throw new UserNotFoundException("User not found. Cannot save vehicle without an associated user.");
-            var newVehicle = vehicle.MapToVehicleDTO(user);
+            var newVehicle = vehicle.MapToNewVehicleDTO(user);
             var vehicleDTO = await _userDAL.SaveVehicle(newVehicle);
             return vehicleDTO.MapToUserVehicle();  
         }
