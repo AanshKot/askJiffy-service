@@ -6,6 +6,7 @@ namespace askJiffy_service.Repository.DAOs
     {
         Task<UserDTO?> getUserByEmail(string email);
         Task<UserDTO> InsertNewUser(UserDTO userDTO);
+        Task<List<VehicleDTO>> GetUserVehicles(string email);
         Task<VehicleDTO> SaveNewVehicle(VehicleDTO vehicleDTO);
         Task<VehicleDTO> UpdateVehicle(VehicleDTO vehicleDTO);
         Task<VehicleDTO?> GetVehicleById(string email, int vehicleId);

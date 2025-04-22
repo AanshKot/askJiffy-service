@@ -42,7 +42,15 @@ namespace askJiffy_service.Repository.DAOs
                 await _context.SaveChangesAsync();
                 return userDTO;       
         }
+        public async Task<List<VehicleDTO>> GetUserVehicles(string email) 
+        {
+            var user = await _context.Users.Include(u => u.Vehicles).FirstOrDefaultAsync(user => user.Email.Equals(email)) 
+            ?? throw new UserNotFoundException("Error Retrieving list of user vehicles: User Profile not Found In DB.");
 
+            var vehicleList = user.Vehicles.Where(v => !v.IsDeleted).ToList();
+
+            return vehicleList;
+        }
         public async Task<VehicleDTO> SaveNewVehicle(VehicleDTO vehicleDTO)
         {
             _context.Vehicles.Add(vehicleDTO);

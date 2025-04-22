@@ -42,7 +42,10 @@ namespace askJiffy_service.Business.DAL
             var user = await _userDAO.getUserByEmail(email);
             return user;
         }
-
+        public async Task<List<VehicleDTO>> GetVehicles(string email)
+        {
+            return await _userDAO.GetUserVehicles(email);
+        }
         public async Task<VehicleDTO> SaveVehicle(VehicleDTO vehicle) {
             var savedVehicleDTO = await _userDAO.SaveNewVehicle(vehicle);
             return savedVehicleDTO;

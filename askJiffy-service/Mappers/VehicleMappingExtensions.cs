@@ -22,7 +22,7 @@ namespace askJiffy_service.Mappers
         }
 
         // Used only for creating new VehicleDTOs; EF generates Id
-        public static VehicleDTO MapToVehicleDTO(this SaveVehicleRequest newVehicle, UserDTO userDTO)
+        public static VehicleDTO MapToNewVehicleDTO(this SaveVehicleRequest newVehicle, UserDTO userDTO)
         {
             return new VehicleDTO
             {
