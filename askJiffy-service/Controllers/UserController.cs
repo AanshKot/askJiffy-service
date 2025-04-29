@@ -172,8 +172,8 @@ namespace askJiffy_service.Controllers
 
             try
             {
-                await _userBL.DeleteVehicle(userEmail, vehicleId);
-                return Ok();
+                var deletedVehicle = await _userBL.DeleteVehicle(userEmail, vehicleId);
+                return Ok(deletedVehicle);
             }
             catch (UserNotFoundException)
             {
