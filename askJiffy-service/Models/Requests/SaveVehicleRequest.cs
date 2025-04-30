@@ -11,6 +11,9 @@ namespace askJiffy_service.Models.Requests
         public required string Make { get; set; }
         [Required]
         public required string Model { get; set; }
+
+        public string? Trim { get; set; }
+
         [Required]
         public required int Year { get; set; }
         public Transmission? Transmission { get; set; }

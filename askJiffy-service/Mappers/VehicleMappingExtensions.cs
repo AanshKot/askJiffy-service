@@ -14,6 +14,7 @@ namespace askJiffy_service.Mappers
                 Id = vehicleDTO.Id,
                 Make = vehicleDTO.Make,
                 Model = vehicleDTO.Model,
+                Trim = vehicleDTO.Trim,
                 Year = vehicleDTO.Year,
                 Chassis = vehicleDTO.Chassis,
                 Transmission = vehicleDTO.Transmission,
@@ -29,6 +30,7 @@ namespace askJiffy_service.Mappers
                 Make = newVehicle.Make,
                 Model = newVehicle.Model,
                 Year = newVehicle.Year,
+                Trim = newVehicle.Trim,
                 Chassis = newVehicle.Chassis,
                 Transmission = newVehicle.Transmission,
                 Mileage = newVehicle.Mileage,
@@ -41,6 +43,7 @@ namespace askJiffy_service.Mappers
             existingVehicle.Make = updateVehicle.Make;
             existingVehicle.Model = updateVehicle.Model;
             existingVehicle.Year = updateVehicle.Year;
+            existingVehicle.Trim = updateVehicle.Trim;
             existingVehicle.Chassis = updateVehicle.Chassis;
             existingVehicle.Transmission = updateVehicle.Transmission;
             existingVehicle.Mileage = updateVehicle.Mileage;
