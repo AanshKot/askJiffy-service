@@ -7,6 +7,7 @@ namespace askJiffy_service.Models.Responses.User
         public required int Id { get; set; }
         public required string Make { get; set; }
         public required string Model { get; set; }
+        public string? Trim { get; set; }
         public required int Year { get; set; }
         public string? Chassis { get; set; }
         public Transmission? Transmission { get; set; }

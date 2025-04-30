@@ -9,6 +9,7 @@ namespace askJiffy_service.Models.DTOs
         public string? Chassis { get; set; }
         public required string Make { get; set; }
         public required string Model { get; set; }
+        public string? Trim { get; set; }
         public required int Year { get; set; }
         public Transmission? Transmission { get; set; }
         public int? Mileage { get; set; }
