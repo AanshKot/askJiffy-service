@@ -11,7 +11,5 @@ namespace askJiffy_service.Models.Requests
         public int VehicleId { get; set; }
         [Required]
         public required string InitialQuestionText { get; set; }
-        [Required]
-        public QuestionType QuestionType { get; set; }
     }
 }

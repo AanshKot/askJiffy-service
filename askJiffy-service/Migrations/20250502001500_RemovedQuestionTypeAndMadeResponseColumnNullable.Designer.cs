@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using askJiffy_service.Models;
 
@@ -11,9 +12,11 @@ using askJiffy_service.Models;
 namespace askJiffy_service.Migrations
 {
     [DbContext(typeof(AskJiffyDBContext))]
-    partial class AskJiffyDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250502001500_RemovedQuestionTypeAndMadeResponseColumnNullable")]
+    partial class RemovedQuestionTypeAndMadeResponseColumnNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
