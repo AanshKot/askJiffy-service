@@ -66,12 +66,14 @@ namespace askJiffy_service.Repository.DAOs
             await _context.SaveChangesAsync();
             return vehicleDTO;
         }
-        public async Task<VehicleDTO?> GetVehicleById(string email, int vehicleId)
+        public async Task<VehicleDTO> GetVehicleById(string email, int vehicleId)
         {
             var user = await _context.Users.Include(u => u.Vehicles).FirstOrDefaultAsync(user => user.Email.Equals(email))
              ?? throw new UserNotFoundException("Error Finding Vehicle: User Profile not Found.");
 
-            var vehicle = user.Vehicles.FirstOrDefault(v => v.Id == vehicleId && !v.IsDeleted);
+            var vehicle = user.Vehicles.FirstOrDefault(v => v.Id == vehicleId && !v.IsDeleted) 
+                ?? throw new VehicleNotFoundException("User vehicle doesn't exist or was deleted");
+
             return vehicle;
         }
 
@@ -85,6 +87,17 @@ namespace askJiffy_service.Repository.DAOs
             vehicle.IsDeleted = true;
             await _context.SaveChangesAsync();
             return vehicle.IsDeleted;
+        }
+
+        public async Task<ChatSessionDTO> SaveChatSession(ChatSessionDTO chatSessionDTO)
+        {
+            _context.ChatSessions.Add(chatSessionDTO);
+            await _context.SaveChangesAsync();
+
+            // does chatSession explicitly load its chatMessages on dbContext save, or since it already has it 
+            // it doesn't need to?
+
+            return chatSessionDTO;
         }
     }
 }

@@ -38,6 +38,7 @@ namespace askJiffy_service.Mappers
             };
         }
 
+        // used only for updating existing vehicles (meaning you don't have to pass in a userDTO)
         public static VehicleDTO MapToVehicleDTO(this SaveVehicleRequest updateVehicle, VehicleDTO existingVehicle) 
         {
             existingVehicle.Make = updateVehicle.Make;

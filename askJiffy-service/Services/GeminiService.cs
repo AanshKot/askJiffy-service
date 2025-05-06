@@ -1,9 +1,7 @@
 ﻿
 using askJiffy_service.Configuration;
 using askJiffy_service.Models.Responses.Chat;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Options;
-using Microsoft.Identity.Client;
 using System.Text;
 using System.Text.Json;
 
@@ -101,7 +99,7 @@ namespace askJiffy_service.Services
             var streamReader = new StreamReader(stream);
 
             // look at google doc for approximate return type AND explanation of conditions
-            // line is the server-sent event (SSE) message recieved by Gemini's api, has data: prefix indicating start of actual data in message 
+            // line is the server-sent event (SSE) message recieved from Gemini's api, has data: prefix indicating start of actual data in message 
             // each message may add new text
             // stream ends with event: done
 
