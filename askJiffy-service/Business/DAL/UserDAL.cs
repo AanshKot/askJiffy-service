@@ -1,5 +1,6 @@
 ﻿using askJiffy_service.Enums;
 using askJiffy_service.Models.DTOs;
+using askJiffy_service.Models.Requests;
 using askJiffy_service.Repository.DAOs;
 
 namespace askJiffy_service.Business.DAL
@@ -54,13 +55,28 @@ namespace askJiffy_service.Business.DAL
         {
             return await _userDAO.UpdateVehicle(vehicle);
         }
-        public async Task<VehicleDTO?> GetUserVehicle(string email, int vehicleId)
+        public async Task<VehicleDTO> GetUserVehicle(string email, int vehicleId)
         {
             return await _userDAO.GetVehicleById(email, vehicleId);
         }
         public async Task<bool> DeleteVehicle(string email, int vehicleId)
         {
             return await _userDAO.DeleteVehicle(email, vehicleId);
+        }
+
+        public async Task<ChatSessionDTO> SaveChatSession(ChatSessionDTO chatSessionDTO)
+        {
+            return await _userDAO.SaveChatSession(chatSessionDTO);
+        }
+
+        public Task<ChatMessageDTO> CreateNewChatMessage(int chatSessionId, Question question, string response)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ChatMessageDTO> UpdateExistingChatMessage(int chatMessageId, string updatedResponse)
+        {
+            throw new NotImplementedException();
         }
     }
 }

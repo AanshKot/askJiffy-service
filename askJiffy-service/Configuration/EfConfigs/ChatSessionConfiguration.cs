@@ -10,10 +10,11 @@ namespace askJiffy_service.Configuration.EfConfigs
         {
             builder.HasKey(t => t.Id);
             builder.Property(t => t.Title).HasMaxLength(255);
-            builder.Property(t => t.CreatedAt).IsRequired().HasColumnType("Date").HasDefaultValueSql("GETDATE()");
+            builder.Property(t => t.CreatedAt).IsRequired().HasColumnType("datetime2").HasDefaultValueSql("GETUTCDATE()");
             
             //Update Date has to be > DateCreatedAt
-            builder.Property(t => t.UpdatedAt).IsRequired().ValueGeneratedOnAddOrUpdate().HasColumnType("Date").HasDefaultValueSql("GETDATE()");
+            builder.Property(t => t.UpdatedAt).IsRequired().ValueGeneratedOnAddOrUpdate().HasColumnType("datetime2").HasDefaultValueSql("GETUTCDATE()");
+            builder.Property(t => t.IsDeleted).HasDefaultValue(false);
         }
     }
 }
