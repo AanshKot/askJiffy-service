@@ -69,11 +69,14 @@ namespace askJiffy_service.Services
         // Streams a sequence of strings asynchronously
         // yielding one at a time
         // allowing the ChatBL to consume these responses with an 'await foreach' loop
-        public async IAsyncEnumerable<string> StreamAnswerAsync(string question)
+        public async IAsyncEnumerable<string> StreamAnswerAsync(string vehicleContext, string message)
         {
             var requestUri = $"v1beta/models/{_geminiModel}:streamGenerateContent?alt=sse&key={_geminiAPIKey}";
 
             var request = new HttpRequestMessage(HttpMethod.Post, requestUri);
+
+            var question = $"This is the vehicle {vehicleContext} that the question is referencing, use this for background to answer the user's question/message: {message}";
+
             var requestBody = new
             {
                 contents = new[]

@@ -11,6 +11,8 @@ namespace askJiffy_service.Repository.DAOs
         Task<VehicleDTO> UpdateVehicle(VehicleDTO vehicleDTO);
         Task<VehicleDTO> GetVehicleById(string email, int vehicleId);
         Task<bool> DeleteVehicle(string email, int vehicleId);
-        Task<ChatSessionDTO> SaveChatSession(ChatSessionDTO chatSessionDTO);
+        Task<ChatSessionDTO> SaveNewChatSession(ChatSessionDTO chatSessionDTO);
+        Task<ChatSessionDTO> UpdateExistingChatSession(ChatSessionDTO chatSessionDTO);
+        Task<ChatSessionDTO> FindExistingChatSession(string email, int chatSessionId);
     }
 }

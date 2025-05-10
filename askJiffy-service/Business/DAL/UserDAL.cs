@@ -66,17 +66,17 @@ namespace askJiffy_service.Business.DAL
 
         public async Task<ChatSessionDTO> SaveChatSession(ChatSessionDTO chatSessionDTO)
         {
-            return await _userDAO.SaveChatSession(chatSessionDTO);
+            return await _userDAO.SaveNewChatSession(chatSessionDTO);
         }
 
-        public Task<ChatMessageDTO> CreateNewChatMessage(int chatSessionId, Question question, string response)
+        public async Task<ChatSessionDTO> UpdateChatSession(ChatSessionDTO chatSessionDTO)
         {
-            throw new NotImplementedException();
+            return await _userDAO.UpdateExistingChatSession(chatSessionDTO);
         }
 
-        public Task<ChatMessageDTO> UpdateExistingChatMessage(int chatMessageId, string updatedResponse)
+        public async Task<ChatSessionDTO> FindChatSession(string email, int chatSessionId)
         {
-            throw new NotImplementedException();
+            return await _userDAO.FindExistingChatSession(email, chatSessionId);
         }
     }
 }

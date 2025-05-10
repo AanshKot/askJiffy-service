@@ -29,11 +29,12 @@ namespace askJiffy_service.Mappers
             };
         }
 
-        public static void PushInitialChatMessage(this ChatSessionDTO chatSessionDTO, string initialQuestion) {
+        public static void PushChatMessage(this ChatSessionDTO chatSessionDTO, string messageContent, string? response = null) {
             var chatMessage = new ChatMessageDTO
             {
                 ChatSession = chatSessionDTO,
-                Question = initialQuestion,
+                Question = messageContent,
+                Response = response
             };
 
             chatSessionDTO.ChatMessages.Add(chatMessage);

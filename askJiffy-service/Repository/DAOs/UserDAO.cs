@@ -29,7 +29,16 @@ namespace askJiffy_service.Repository.DAOs
             var user = await _context.Users.FirstOrDefaultAsync(user => user.Email.Equals(email));
 
             if (user != null) { 
-                await _context.Entry(user).Collection(user => user.ChatSessions).LoadAsync();
+                await _context.Entry(user).Collection(user => user.ChatSessions).Query().Where(cs => !cs.IsDeleted).LoadAsync();
+
+                // Explicitly load ChatMessages for each ChatSession
+                foreach (var session in user.ChatSessions)
+                {
+                    await _context.Entry(session)
+                        .Collection(cs => cs.ChatMessages)
+                        .LoadAsync();
+                }
+
                 await _context.Entry(user).Collection(user => user.Vehicles).Query().Where(v => !v.IsDeleted).LoadAsync();
             }
 
@@ -82,22 +91,43 @@ namespace askJiffy_service.Repository.DAOs
             var user = await _context.Users.Include(u => u.Vehicles).FirstOrDefaultAsync(user => user.Email.Equals(email)) 
             ?? throw new UserNotFoundException("Error Deleting Vehicle: User Profile not Found.");
 
-            var vehicle = user.Vehicles.FirstOrDefault(v => v.Id == vehicleId) ?? throw new VehicleNotFoundException("User has either already deleted this vehicle or this vehicle doesn't exist");
+            var vehicle = user.Vehicles.FirstOrDefault(v => v.Id == vehicleId && !v.IsDeleted) 
+            ?? throw new VehicleNotFoundException("User has either already deleted this vehicle or this vehicle doesn't exist");
 
             vehicle.IsDeleted = true;
             await _context.SaveChangesAsync();
             return vehicle.IsDeleted;
         }
 
-        public async Task<ChatSessionDTO> SaveChatSession(ChatSessionDTO chatSessionDTO)
+        public async Task<ChatSessionDTO> SaveNewChatSession(ChatSessionDTO chatSessionDTO)
         {
             _context.ChatSessions.Add(chatSessionDTO);
             await _context.SaveChangesAsync();
-
-            // does chatSession explicitly load its chatMessages on dbContext save, or since it already has it 
-            // it doesn't need to?
-
             return chatSessionDTO;
+        }
+
+        public async Task<ChatSessionDTO> UpdateExistingChatSession(ChatSessionDTO chatSessionDTO)
+        {
+            _context.ChatSessions.Update(chatSessionDTO);
+            await _context.SaveChangesAsync();
+            return chatSessionDTO;
+        }
+
+        public async Task<ChatSessionDTO> FindExistingChatSession(string email, int chatSessionId)
+        {
+            //eager load chatSession and related child nav properties: https://stackoverflow.com/questions/68447966/including-multiple-children-of-child-table
+            var user = await _context.Users
+                .Include(u => u.ChatSessions)
+                    .ThenInclude(cs => cs.ChatMessages)
+                .Include(u => u.ChatSessions)
+                    .ThenInclude(cs => cs.Vehicle)
+                .FirstOrDefaultAsync(user => user.Email.Equals(email))
+            ?? throw new UserNotFoundException("Error Finding Chat Session: User Profile not Found.");
+
+            var chatSession = user.ChatSessions.FirstOrDefault(cs => cs.Id == chatSessionId && !cs.IsDeleted) 
+            ?? throw new ChatSessionNotFoundException("User chat session doesn't exist or was deleted");
+
+            return chatSession;
         }
     }
 }

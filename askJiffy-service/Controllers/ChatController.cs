@@ -1,4 +1,5 @@
 ﻿using askJiffy_service.Business.BL;
+using askJiffy_service.Exceptions;
 using askJiffy_service.Models.Requests;
 using askJiffy_service.Models.Responses.Chat;
 using askJiffy_service.Services;
@@ -41,6 +42,10 @@ namespace askJiffy_service.Controllers
                 var newChatSession = await _chatBL.NewChat(userEmail, chatRequest);
                 return Ok(newChatSession);
             }
+            catch(VehicleNotFoundException vex)
+            {
+                return BadRequest(vex.Message);
+            }
             catch (ApplicationException aex) 
             {
                 _logger.LogError(aex, "Error with Gemini call");
@@ -59,11 +64,24 @@ namespace askJiffy_service.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task StreamAnswer(int chatSessionId, [FromBody] Question question)
+        public async Task StreamAnswer(int chatSessionId, [FromBody] Message question)
         {
+            var userEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+            var provider = User.FindFirst("iss")?.Value;
+            
             var response = Response;
 
-            await _chatBL.StreamResponseAsync(question, response);
+            if (string.IsNullOrEmpty(userEmail) || string.IsNullOrEmpty(provider))
+            {
+                //in a streaming response scenario can't use return Unauthorized or throw new Unauthorized because not returning an IAction result
+                response.StatusCode = StatusCodes.Status401Unauthorized;
+                await response.WriteAsync("Unauthorized: Missing required claims.");
+                return;
+            }
+
+            
+
+            await _chatBL.StreamResponseAsync(userEmail, chatSessionId, question, response);
         }
     }
 }

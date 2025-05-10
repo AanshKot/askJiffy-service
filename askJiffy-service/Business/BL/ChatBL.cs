@@ -5,6 +5,7 @@ using askJiffy_service.Models.DTOs;
 using askJiffy_service.Models.Requests;
 using askJiffy_service.Models.Responses.Chat;
 using askJiffy_service.Services;
+using askJiffy_service.Utils;
 using System.Text;
 
 namespace askJiffy_service.Business.BL
@@ -44,7 +45,7 @@ namespace askJiffy_service.Business.BL
                 UpdatedAt = DateTime.Now,
             };
 
-            newChatSessionDTO.PushInitialChatMessage(chatRequest.InitialQuestionText);
+            newChatSessionDTO.PushChatMessage(chatRequest.InitialQuestionText);
 
             var createdChatSessionDTO = await _userDAL.SaveChatSession(newChatSessionDTO);
 
@@ -52,14 +53,19 @@ namespace askJiffy_service.Business.BL
         }
 
         //builds response and flushes after each chunk is read
-        public async Task StreamResponseAsync(Question question, HttpResponse response)
+        public async Task StreamResponseAsync(string email, int chatSessionId, Message question, HttpResponse response)
         {
-            response.ContentType = "text/plain";
+            // https://stackoverflow.com/questions/52098863/whats-the-difference-between-text-event-stream-and-application-streamjson
+            response.ContentType = "text/event-stream";
             var fullResponse = new StringBuilder();
+
+            var chatSessionDTO = await _userDAL.FindChatSession(email, chatSessionId);
+
+            var vehicleStringContext = chatSessionDTO.Vehicle.ToVehicleStringContext();
 
             // the response from gemini service's streamAnswerAsync is a IAsyncEnumerable<string> to forward this lazily returned iterable can use a foreach loop
             // examples: https://learn.microsoft.com/en-us/archive/msdn-magazine/2019/november/csharp-iterating-with-async-enumerables-in-csharp-8
-            await foreach (var textChunk in _geminiService.StreamAnswerAsync(question.QuestionText)) {
+            await foreach (var textChunk in _geminiService.StreamAnswerAsync(vehicleStringContext, question.QuestionText)) {
 
                 fullResponse.Append(textChunk);
 
@@ -72,10 +78,23 @@ namespace askJiffy_service.Business.BL
                 // asynchronously sends all currently buffered output to the client
                 await response.Body.FlushAsync();
             }
-            
-            //have some logic below for saving the message and its completed response to the chatSession list, updating the lastUpdated portion of the chatSession
-           
-            
+
+            // if question comes in with an Id that means the user is either editing a prexisting message or wants the answer to the initial question
+            // save new response to chatMessage
+            if (question.chatMessageId != null)
+            {
+                var chatMessage = chatSessionDTO.ChatMessages.FirstOrDefault(cm => cm.Id == question.chatMessageId) ?? throw new ChatMessageNotFoundException("Unable to find chat message");
+                chatMessage.Question = question.QuestionText; //for edited messages
+                chatMessage.Response = fullResponse.ToString();
+            }
+            else
+            { 
+                chatSessionDTO.PushChatMessage(question.QuestionText,fullResponse.ToString());
+            }
+
+
+            chatSessionDTO.UpdatedAt = DateTime.UtcNow;
+            await _userDAL.UpdateChatSession(chatSessionDTO);
         }
     }
 }

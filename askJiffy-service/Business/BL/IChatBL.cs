@@ -9,6 +9,6 @@ namespace askJiffy_service.Business.BL
         Task<ChatSession> NewChat(string email, ChatRequest chatRequest);
 
         // Returns a streamed response to a question, saves response to new chat message
-        Task StreamResponseAsync(Question prompt, HttpResponse response);
+        Task StreamResponseAsync(string email, int chatSessionId, Message prompt, HttpResponse response);
     }
 }
