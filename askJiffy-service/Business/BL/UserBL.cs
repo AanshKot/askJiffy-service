@@ -15,16 +15,26 @@ namespace askJiffy_service.Business.BL
             _userDAL = userDAL;
         }
 
-        public async Task<UserProfile> GetOrCreateUser(string email, string provider)
-        {            
-            var userDTO = await _userDAL.GetOrCreateUser(email,provider) ?? throw new UserNotFoundException("Cannot find or create a user.");
-
-            //map to UserProfile return object
-            var userProfile = userDTO.MapToUserProfile();
-
-            return userProfile;
+        public async Task<bool> CreateUserProfile(string email, string provider)
+        {
+            //first check to see if user really doesn't exist
+            var user = await _userDAL.GetUserByEmail(email);
+            if (user == null)
+            {
+               return await _userDAL.InsertNewUser(email, provider);
+            }
+            return true; //user exists or was successfully created
         }
 
+        public async Task<bool> ExistingUserProfile(string email)
+        {
+            var user = await _userDAL.GetUserByEmail(email);
+
+            if (user == null) {
+                return false;
+            }
+            return true;
+        }
 
         public async Task<List<Vehicle>> GetVehicles(string email)
         {

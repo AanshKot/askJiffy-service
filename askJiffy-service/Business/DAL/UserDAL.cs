@@ -15,29 +15,20 @@ namespace askJiffy_service.Business.DAL
             _userDAO = userDAO;
         }
 
-        public async Task<UserDTO?> GetOrCreateUser(string email, string provider)
+
+        public async Task<bool> InsertNewUser(string email, string provider)
         {
-            var user = await _userDAO.getUserByEmail(email);
-            
-            if (user == null)
+            var defaultUserProfile = new UserDTO
             {
-                //create default user and insert
-                var defaultUserProfile = new UserDTO
-                {
-                    Email = email,
-                    Provider = provider,
-                    Role = UserRole.None,
-                    Vehicles = new List<VehicleDTO>(), 
-                    ChatSessions = new List<ChatSessionDTO>() 
-                };
-              
-                var insertedUser = await _userDAO.InsertNewUser(defaultUserProfile);
+                Email = email,
+                Provider = provider,
+                Role = UserRole.None,
+                Vehicles = new List<VehicleDTO>(),
+                ChatSessions = new List<ChatSessionDTO>()
+            };
 
-                return insertedUser;
-            }
-            return user;
+            return await _userDAO.InsertNewUser(defaultUserProfile);
         }
-
         public async Task<UserDTO?> GetUserByEmail(string email)
         {
             var user = await _userDAO.getUserByEmail(email);
