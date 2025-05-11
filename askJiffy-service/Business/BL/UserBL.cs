@@ -51,7 +51,7 @@ namespace askJiffy_service.Business.BL
         public async Task<Vehicle> UpdateVehicle(int vehicleId, SaveVehicleRequest vehicle, string email)
         {
             //get user vehicle
-            var userVehicle = await _userDAL.GetUserVehicle(email, vehicleId) ?? throw new VehicleNotFoundException("User vehicle doesn't exist");
+            var userVehicle = await _userDAL.GetUserVehicle(email, vehicleId);
             
             //overloaded method, update user vehicleDTO
             var updatedVehicle = vehicle.MapToVehicleDTO(userVehicle);

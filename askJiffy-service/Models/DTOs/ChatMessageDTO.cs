@@ -7,8 +7,7 @@ namespace askJiffy_service.Models.DTOs
         public int Id { get; set; }
         //Navigation property for many to one relationship between ChatSession and ChatMessageDTO
         public required ChatSessionDTO ChatSession { get; set; }
-        public QuestionType QuestionType { get; set; }
         public required string Question { get; set; }
-        public required string Response { get; set; }
+        public string? Response { get; set; }
     }
 }

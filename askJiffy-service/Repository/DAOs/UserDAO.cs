@@ -29,7 +29,7 @@ namespace askJiffy_service.Repository.DAOs
             var user = await _context.Users.FirstOrDefaultAsync(user => user.Email.Equals(email));
 
             if (user != null) { 
-                await _context.Entry(user).Collection(user => user.ChatSessions).LoadAsync();
+                await _context.Entry(user).Collection(user => user.ChatSessions).Query().Where(cs => !cs.IsDeleted).LoadAsync();
                 await _context.Entry(user).Collection(user => user.Vehicles).Query().Where(v => !v.IsDeleted).LoadAsync();
             }
 
@@ -66,12 +66,14 @@ namespace askJiffy_service.Repository.DAOs
             await _context.SaveChangesAsync();
             return vehicleDTO;
         }
-        public async Task<VehicleDTO?> GetVehicleById(string email, int vehicleId)
+        public async Task<VehicleDTO> GetVehicleById(string email, int vehicleId)
         {
             var user = await _context.Users.Include(u => u.Vehicles).FirstOrDefaultAsync(user => user.Email.Equals(email))
              ?? throw new UserNotFoundException("Error Finding Vehicle: User Profile not Found.");
 
-            var vehicle = user.Vehicles.FirstOrDefault(v => v.Id == vehicleId && !v.IsDeleted);
+            var vehicle = user.Vehicles.FirstOrDefault(v => v.Id == vehicleId && !v.IsDeleted) 
+                ?? throw new VehicleNotFoundException("User vehicle doesn't exist or was deleted");
+
             return vehicle;
         }
 
@@ -80,11 +82,53 @@ namespace askJiffy_service.Repository.DAOs
             var user = await _context.Users.Include(u => u.Vehicles).FirstOrDefaultAsync(user => user.Email.Equals(email)) 
             ?? throw new UserNotFoundException("Error Deleting Vehicle: User Profile not Found.");
 
-            var vehicle = user.Vehicles.FirstOrDefault(v => v.Id == vehicleId) ?? throw new VehicleNotFoundException("User has either already deleted this vehicle or this vehicle doesn't exist");
+            var vehicle = user.Vehicles.FirstOrDefault(v => v.Id == vehicleId && !v.IsDeleted) 
+            ?? throw new VehicleNotFoundException("User has either already deleted this vehicle or this vehicle doesn't exist");
 
             vehicle.IsDeleted = true;
             await _context.SaveChangesAsync();
             return vehicle.IsDeleted;
+        }
+
+        public async Task<ChatSessionDTO> SaveNewChatSession(ChatSessionDTO chatSessionDTO)
+        {
+            _context.ChatSessions.Add(chatSessionDTO);
+            await _context.SaveChangesAsync();
+            return chatSessionDTO;
+        }
+
+        public async Task<ChatSessionDTO> UpdateExistingChatSession(ChatSessionDTO chatSessionDTO)
+        {
+            _context.ChatSessions.Update(chatSessionDTO);
+            await _context.SaveChangesAsync();
+            return chatSessionDTO;
+        }
+
+        public async Task<ChatSessionDTO> FindExistingChatSession(string email, int chatSessionId)
+        {
+            //eager load chatSession and related child nav properties: https://stackoverflow.com/questions/68447966/including-multiple-children-of-child-table
+            var user = await _context.Users
+                .Include(u => u.ChatSessions)
+                    .ThenInclude(cs => cs.ChatMessages)
+                .Include(u => u.ChatSessions)
+                    .ThenInclude(cs => cs.Vehicle)
+                .FirstOrDefaultAsync(user => user.Email.Equals(email))
+            ?? throw new UserNotFoundException("Error Finding Chat Session: User Profile not Found.");
+
+            var chatSession = user.ChatSessions.FirstOrDefault(cs => cs.Id == chatSessionId && !cs.IsDeleted) 
+            ?? throw new ChatSessionNotFoundException("User chat session doesn't exist or was deleted");
+
+            return chatSession;
+        }
+
+        public async Task<List<ChatSessionDTO>> GetUserChatSessions(string email)
+        {
+            var user = await _context.Users.Include(u => u.ChatSessions).FirstOrDefaultAsync(user => user.Email.Equals(email))
+            ?? throw new UserNotFoundException("Error Retrieving list of user chat sessions: User Profile not Found In DB.");
+
+            var chatSessionHistory = user.ChatSessions.Where(cs => !cs.IsDeleted).ToList();
+
+            return chatSessionHistory;
         }
     }
 }

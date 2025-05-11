@@ -3,14 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace askJiffy_service.Models.Requests
 {
-    public class Question
+    public class Message
     {
-        [Required]
-        public required int ChatSessionId { get; set; }
+        public int? chatMessageId { get; set; }
         [Required]
         public required string QuestionText { get; set; }
-        [Required]
-        public required QuestionType QuestionType { get; set; }
-
     }
 }

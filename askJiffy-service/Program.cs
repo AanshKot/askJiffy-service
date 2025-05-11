@@ -2,6 +2,7 @@ using askJiffy_service.Business.BL;
 using askJiffy_service.Business.DAL;
 using askJiffy_service.Models;
 using askJiffy_service.Repository.DAOs;
+using askJiffy_service.Services.Extensions;
 using Betalgo.Ranul.OpenAI.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -50,7 +51,15 @@ builder.Services.AddSwaggerGen(options =>
 
 // Add OpenAI service pass API key
 builder.Services.AddOpenAIService(settings => { 
-    settings.ApiKey = builder.Configuration.GetValue<string>("AskJiffy:OpenApiKey") ?? throw new InvalidOperationException("API key for OpenAI is not configured."); ; 
+    settings.ApiKey = builder.Configuration.GetValue<string>("AskJiffy:OpenApiKey") ?? throw new InvalidOperationException("API key for OpenAI is not configured."); 
+});
+
+
+//Add Gemini Service pass API key
+builder.Services.AddGeminiService(setupAction => { 
+    setupAction.ApiKey = builder.Configuration.GetValue<string>("GEMINI_API_KEY") ?? throw new InvalidOperationException("API key for Gemini API is not configured.");
+    setupAction.Model = "gemini-2.0-flash-001";
+    setupAction.GeminiDefaultBaseDomain = "https://generativelanguage.googleapis.com/";
 });
 
 //DB Connection + Context
@@ -58,6 +67,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 //Add services for DI
 builder.Services.AddScoped<IUserBL, UserBL>();
+builder.Services.AddScoped<IChatBL, ChatBL>();
 builder.Services.AddScoped<IUserDAL,UserDAL>();
 builder.Services.AddScoped<IUserDAO, UserDAO>();
 

@@ -9,7 +9,11 @@ namespace askJiffy_service.Repository.DAOs
         Task<List<VehicleDTO>> GetUserVehicles(string email);
         Task<VehicleDTO> SaveNewVehicle(VehicleDTO vehicleDTO);
         Task<VehicleDTO> UpdateVehicle(VehicleDTO vehicleDTO);
-        Task<VehicleDTO?> GetVehicleById(string email, int vehicleId);
+        Task<VehicleDTO> GetVehicleById(string email, int vehicleId);
         Task<bool> DeleteVehicle(string email, int vehicleId);
+        Task<ChatSessionDTO> SaveNewChatSession(ChatSessionDTO chatSessionDTO);
+        Task<ChatSessionDTO> UpdateExistingChatSession(ChatSessionDTO chatSessionDTO);
+        Task<ChatSessionDTO> FindExistingChatSession(string email, int chatSessionId);
+        Task<List<ChatSessionDTO>> GetUserChatSessions(string email);
     }
 }

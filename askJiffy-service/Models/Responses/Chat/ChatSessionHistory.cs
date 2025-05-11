@@ -1,10 +1,9 @@
-﻿namespace askJiffy_service.Models.Responses.User
+﻿namespace askJiffy_service.Models.Responses.Chat
 {
-    public class UserChat
+    public class ChatSessionHistory
     {
         public required int Id { get; set; }
         public required string Title { get; set; }
-        public required DateTime CreatedAt { get; set; }
         public required DateTime UpdatedAt { get; set; }
     }
 }
