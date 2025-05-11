@@ -5,7 +5,7 @@ namespace askJiffy_service.Business.DAL
 {
     public interface IUserDAL
     {
-        Task<UserDTO?> GetOrCreateUser(string email, string provider);
+        Task<bool> InsertNewUser(string email, string provider);
         Task<UserDTO?> GetUserByEmail(string email);
         Task<List<VehicleDTO>> GetVehicles(string email);
         //returning the saved VehicleDTO as we need the Id of newly saved VehicleDTO

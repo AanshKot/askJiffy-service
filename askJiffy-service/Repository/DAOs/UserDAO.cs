@@ -20,27 +20,14 @@ namespace askJiffy_service.Repository.DAOs
         //add a ? to indicate the return can be null
         public async Task<UserDTO?> getUserByEmail(string email)
         {
-            /* chose to proceed with explicit loading, this is because eager loading fetches data at the same time as the main entity
-             eager loading basically joins the User, Chat and Vehicle tables then queries for matching user email this query can be 
-            expensive if the email doesn't exist, joining tables for no reason. With explicit loading you can fetch data on demand,
-            after the main entity is loaded. Since the related data isn't always needed (i.e. when the user doesn't exist)
-
-            can drill down and include multiple levels of related data using the .ThenInclude method */
-            var user = await _context.Users.FirstOrDefaultAsync(user => user.Email.Equals(email));
-
-            if (user != null) { 
-                await _context.Entry(user).Collection(user => user.ChatSessions).Query().Where(cs => !cs.IsDeleted).LoadAsync();
-                await _context.Entry(user).Collection(user => user.Vehicles).Query().Where(v => !v.IsDeleted).LoadAsync();
-            }
-
-            return user;
+            return await _context.Users.FirstOrDefaultAsync(user => user.Email.Equals(email));
         }
 
-        public async Task<UserDTO> InsertNewUser(UserDTO userDTO)
+        public async Task<bool> InsertNewUser(UserDTO userDTO)
         {
                 _context.Users.Add(userDTO);
                 await _context.SaveChangesAsync();
-                return userDTO;       
+                return true;       
         }
         public async Task<List<VehicleDTO>> GetUserVehicles(string email) 
         {
