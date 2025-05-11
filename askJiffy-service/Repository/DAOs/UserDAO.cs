@@ -30,15 +30,6 @@ namespace askJiffy_service.Repository.DAOs
 
             if (user != null) { 
                 await _context.Entry(user).Collection(user => user.ChatSessions).Query().Where(cs => !cs.IsDeleted).LoadAsync();
-
-                // Explicitly load ChatMessages for each ChatSession
-                foreach (var session in user.ChatSessions)
-                {
-                    await _context.Entry(session)
-                        .Collection(cs => cs.ChatMessages)
-                        .LoadAsync();
-                }
-
                 await _context.Entry(user).Collection(user => user.Vehicles).Query().Where(v => !v.IsDeleted).LoadAsync();
             }
 
