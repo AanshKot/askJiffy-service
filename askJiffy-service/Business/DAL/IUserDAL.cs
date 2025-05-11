@@ -16,5 +16,6 @@ namespace askJiffy_service.Business.DAL
         Task<ChatSessionDTO> SaveChatSession(ChatSessionDTO chatSessionDTO);
         Task<ChatSessionDTO> UpdateChatSession(ChatSessionDTO chatSessionDTO);
         Task<ChatSessionDTO> FindChatSession(string email, int chatSessionId);
+        Task<List<ChatSessionDTO>> GetUserChatSessions(string email);
     }
 }

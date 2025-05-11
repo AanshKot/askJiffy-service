@@ -129,5 +129,15 @@ namespace askJiffy_service.Repository.DAOs
 
             return chatSession;
         }
+
+        public async Task<List<ChatSessionDTO>> GetUserChatSessions(string email)
+        {
+            var user = await _context.Users.Include(u => u.ChatSessions).FirstOrDefaultAsync(user => user.Email.Equals(email))
+            ?? throw new UserNotFoundException("Error Retrieving list of user chat sessions: User Profile not Found In DB.");
+
+            var chatSessionHistory = user.ChatSessions.Where(cs => !cs.IsDeleted).ToList();
+
+            return chatSessionHistory;
+        }
     }
 }

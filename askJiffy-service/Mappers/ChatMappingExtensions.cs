@@ -19,6 +19,16 @@ namespace askJiffy_service.Mappers
             };
         }
 
+        public static ChatSessionHistory MapToUserChatHistorySession(this ChatSessionDTO chatSessionDTO)
+        {
+            return new ChatSessionHistory
+            {
+                Id = chatSessionDTO.Id,
+                Title = chatSessionDTO.Title,
+                UpdatedAt = chatSessionDTO.UpdatedAt
+            };
+        }
+
         public static ChatMessage MapToUserChatMessage(this ChatMessageDTO message)
         {
             return new ChatMessage

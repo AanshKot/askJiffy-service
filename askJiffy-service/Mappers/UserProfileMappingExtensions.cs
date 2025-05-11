@@ -19,8 +19,8 @@ namespace askJiffy_service.Mappers
                 Role = entity.Role
             };
         }
-        private static List<ChatSession> MapToUserChatHistory(this ICollection<ChatSessionDTO> chatSessions) {
-            return chatSessions.Select(chatSession => chatSession.MapToUserChatSession()).ToList(); 
+        private static List<ChatSessionHistory> MapToUserChatHistory(this ICollection<ChatSessionDTO> chatSessions) {
+            return chatSessions.Select(chatSession => chatSession.MapToUserChatHistorySession()).ToList(); 
         }
 
         private static List<Vehicle> MapToUserVehicleHistory(this ICollection<VehicleDTO> vehicleDTOs) {

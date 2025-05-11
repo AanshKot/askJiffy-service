@@ -31,7 +31,7 @@ namespace askJiffy_service.Business.BL
             // 5. Call the userDAL to save the newly mapped ChatSessionDTO
 
             var vehicle = await _userDAL.GetUserVehicle(email, chatRequest.VehicleId);
-            var user = await _userDAL.GetUserByEmail(email) ?? throw new UserNotFoundException("User not found. Cannot save vehicle without an associated user.");
+            var user = await _userDAL.GetUserByEmail(email) ?? throw new UserNotFoundException("User not found. Cannot create new Chat without an associated user.");
 
             var chatSessionTitle = await _geminiService.GenerateTitleAsync($"List one title (the best fitting one) for a user question: \"${chatRequest.InitialQuestionText}\" centered around this vehicle ${vehicle.Make} ${vehicle.Model} - ${vehicle.Year}");
 
@@ -96,5 +96,20 @@ namespace askJiffy_service.Business.BL
             chatSessionDTO.UpdatedAt = DateTime.UtcNow;
             await _userDAL.UpdateChatSession(chatSessionDTO);
         }
+
+        public async Task<List<ChatSessionHistory>> GetChatSessions(string email)
+        {
+            var chatSessionDTOs = await _userDAL.GetUserChatSessions(email);
+
+            var chatSessionHistoryList = new List<ChatSessionHistory>();
+
+            foreach (var chatSessionDTO in chatSessionDTOs)
+            {
+                chatSessionHistoryList.Add(chatSessionDTO.MapToUserChatHistorySession());
+            }
+
+            return chatSessionHistoryList;
+        }
+
     }
 }

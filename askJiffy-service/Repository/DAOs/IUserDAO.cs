@@ -14,5 +14,6 @@ namespace askJiffy_service.Repository.DAOs
         Task<ChatSessionDTO> SaveNewChatSession(ChatSessionDTO chatSessionDTO);
         Task<ChatSessionDTO> UpdateExistingChatSession(ChatSessionDTO chatSessionDTO);
         Task<ChatSessionDTO> FindExistingChatSession(string email, int chatSessionId);
+        Task<List<ChatSessionDTO>> GetUserChatSessions(string email);
     }
 }

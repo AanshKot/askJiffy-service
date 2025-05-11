@@ -78,5 +78,10 @@ namespace askJiffy_service.Business.DAL
         {
             return await _userDAO.FindExistingChatSession(email, chatSessionId);
         }
+
+        public async Task<List<ChatSessionDTO>> GetUserChatSessions(string email)
+        {
+            return await _userDAO.GetUserChatSessions(email);
+        }
     }
 }
