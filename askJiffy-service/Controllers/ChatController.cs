@@ -124,7 +124,7 @@ namespace askJiffy_service.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<List<ChatSession>>> getChatSessions(int chatSessionId) {
+        public async Task<ActionResult<ChatSession>> getChatSession(int chatSessionId) {
             var userEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
             var provider = User.FindFirst("iss")?.Value;
 
