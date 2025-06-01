@@ -111,5 +111,11 @@ namespace askJiffy_service.Business.BL
             return chatSessionHistoryList;
         }
 
+        public async Task<ChatSession> GetChatSession(string email, int chatSessionId)
+        {
+            var chatSessionDTO = await _userDAL.FindChatSession(email, chatSessionId);
+
+            return chatSessionDTO.MapToUserChatSession();
+        }
     }
 }
