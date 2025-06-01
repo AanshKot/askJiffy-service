@@ -12,5 +12,6 @@ namespace askJiffy_service.Business.BL
         Task StreamResponseAsync(string email, int chatSessionId, Message prompt, HttpResponse response);
 
         Task<List<ChatSessionHistory>> GetChatSessions(string email);
+        Task<ChatSession> GetChatSession(string email, int chatSessionId);
     }
 }
