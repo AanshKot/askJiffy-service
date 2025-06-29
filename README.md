@@ -20,6 +20,10 @@ This is the **backend API** for a fullstack ChatGPT-style web application, built
 
 - **Gemini** (Google): Configured with Gemini Flash 2.0 model, via API key and custom domain.
 
+### 🚀 Frontend
+You can find the frontend repository here:  
+👉 [Frontend Repo](https://github.com/AanshKot/askJiffy-UI)
+
 <details>
   <summary>📁 Project Structure</summary>
 
