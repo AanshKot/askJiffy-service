@@ -1,4 +1,4 @@
-#AskJiffy – Backend
+# AskJiffy – Backend
 
 This is the **backend API** for a fullstack ChatGPT-style web application, built with **ASP.NET Core**, and integrated with **Google Gemini** for generative AI to stream answers to the UI.
 
