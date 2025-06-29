@@ -81,9 +81,9 @@ namespace askJiffy_service.Business.BL
 
             // if question comes in with an Id that means the user is either editing a prexisting message or wants the answer to the initial question
             // save new response to chatMessage
-            if (question.chatMessageId != null)
+            if (question.Id != null)
             {
-                var chatMessage = chatSessionDTO.ChatMessages.FirstOrDefault(cm => cm.Id == question.chatMessageId) ?? throw new ChatMessageNotFoundException("Unable to find chat message");
+                var chatMessage = chatSessionDTO.ChatMessages.FirstOrDefault(cm => cm.Id == question.Id) ?? throw new ChatMessageNotFoundException("Unable to find chat message");
                 chatMessage.Question = question.QuestionText; //for edited messages
                 chatMessage.Response = fullResponse.ToString();
             }

@@ -5,7 +5,7 @@ namespace askJiffy_service.Models.Requests
 {
     public class Message
     {
-        public int? chatMessageId { get; set; }
+        public int? Id { get; set; }
         [Required]
         public required string QuestionText { get; set; }
     }
