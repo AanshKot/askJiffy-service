@@ -2,7 +2,7 @@
 
 This is the **backend API** for a fullstack ChatGPT-style web application, built with **ASP.NET Core**, and integrated with **Google Gemini** for generative AI to stream answers to the UI.
 
-## 🛠️ Tech Stack
+## 🛠️ Tech Stack && Tools used
 
 - **ASP.NET Core Web API**
 - **Entity Framework Core** with **SQL Server**
